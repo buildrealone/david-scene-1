@@ -1,0 +1,183 @@
+<html>
+
+<head>
+	<title>Parcel Sandbox</title>
+	<meta charset="UTF-8">
+	<script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+  <script src="https://cdn.rawgit.com/mrturck/aframe-joystick/master/joystick.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.0/dist/aframe-extras.min.js"></script>
+  <script src="https://unpkg.com/aframe-animation-timeline-component@2.0.0/dist/aframe-animation-timeline-component.min.js"></script>
+  <script src="https://cdn.rawgit.com/delapuente/aframe-sharedspace-component/master/dist/aframe-sharedspace-component.min.js"></script>
+  <script src="https://rawgit.com/feiss/aframe-environment-component/master/dist/aframe-environment-component.min.js"></script>
+ 
+  <script>
+
+    function getRandomInt(min, max) { // *a random integer between minimum and maximum
+      return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min) + 1) + Math.ceil(min));
+    };
+
+    function getRandomDirection() { // *a random float number between -1 and 1
+      randomX = Math.random() * 2 - 1;
+      randomZ = Math.random() * 2 - 1;
+      randomX_2 = Math.random() * 2 - 1;
+      randomZ_2 = Math.random() * 2 - 1;
+    };
+
+    setInterval(getRandomDirection, 6000);
+    
+    let randomX = Math.random() * 2 - 1;
+    let randomZ = Math.random() * 2 - 1;
+    let randomX_2 = Math.random() * 2 - 1;
+    let randomZ_2 = Math.random() * 2 - 1;
+
+    AFRAME.registerComponent('random-move', 
+      {
+        init: function (el) 
+          {
+            this.mixins = document.getElementsByTagName('a-entity')[1]
+            this.el.setAttribute('position', { x: getRandomInt(-10, 5), y: 0, z: getRandomInt(-5, 10) });
+            console.log(randomX, randomZ)
+            console.log(this.mixins)
+          },
+    
+          tick: function(time, deltaTime) {       
+
+            if (Math.abs(randomX + randomZ > 0.6)) {
+              this.el.setAttribute('animation-mixer', {
+                clip: 'idle',
+                loop: 'repeat',
+                crossFadeDuration: 0.4
+              })
+            }
+            else {
+              this.el.setAttribute('animation-mixer', {
+                clip: 'run',
+                loop: 'repeat',
+                crossFadeDuration: 0.4
+              });
+
+              this.el.setAttribute('rotation', {
+                x: 0, y: (Math.atan2(-randomZ, randomX) * 180 / Math.PI) - 90, z: 0
+              });
+
+              this.el.object3D.position.x += (-randomX * 0.05);
+              this.el.object3D.position.z += (-randomZ * 0.05);
+              if (this.el.object3D.position.x > 25) {
+                this.el.object3D.position.x = 25
+              }
+              if (this.el.object3D.position.x < -25) {
+                this.el.object3D.position.x = -25
+              }
+              if (this.el.object3D.position.z > 25) {
+                this.el.object3D.position.z = 25
+              }
+              if (this.el.object3D.position.z < -25) {
+                this.el.object3D.position.z = -25
+              }
+            } 
+          }
+      }
+    );
+  </script>
+  <script>
+    AFRAME.registerComponent('random-move2', 
+      {
+        init: function (el) 
+          {
+            this.mixins = document.getElementsByTagName('a-entity')[1]
+            this.el.setAttribute('position', { x: getRandomInt(-10, 5), y: 0, z: getRandomInt(-5, 10) });
+            console.log(randomX_2, randomZ_2)
+            console.log(this.mixins)
+          },
+    
+          tick: function(time, deltaTime) {       
+
+            if (Math.abs(randomX_2 + randomZ_2 > 0.5)) {
+              this.el.setAttribute('animation-mixer', {
+                clip: 'Animation',
+                loop: 'repeat',
+                crossFadeDuration: 0.4
+              })
+            }
+            else {
+              this.el.setAttribute('animation-mixer', {
+                clip: 'Animation',
+                loop: 'repeat',
+                crossFadeDuration: 0.4
+              });
+
+              this.el.setAttribute('rotation', {
+                x: 0, y: (Math.atan2(-randomZ_2, randomX_2) * 180 / Math.PI) -90, z: 0
+              });
+
+              this.el.object3D.position.x += (-randomX_2 * 0.07);
+              this.el.object3D.position.z += (-randomZ_2 * 0.07);
+              if (this.el.object3D.position.x > 25) {
+                this.el.object3D.position.x = 25
+              }
+              if (this.el.object3D.position.x < -25) {
+                this.el.object3D.position.x = -25
+              }
+              if (this.el.object3D.position.z > 25) {
+                this.el.object3D.position.z = 25
+              }
+              if (this.el.object3D.position.z < -25) {
+                this.el.object3D.position.z = -25
+              }
+            } 
+          }
+      }
+    );
+  </script>
+
+
+
+</head>
+
+<body>
+  <a-scene joystick vr-mode-ui="enabled: true">
+    <a-entity camera id="camera" position="-3 5 10" rotation="-13 0 0" look-controls wasd-controls></a-entity>
+    <a-assets>
+      <a-asset-item id="trex" src="./assets/tyrannosaurus_rex/scene.gltf"></a-asset-item>
+      <a-asset-item id="ptr" src="./assets/animated_flying_pteradactal_dinosaur_loop/scene.gltf"></a-asset-item>
+      <a-asset-item id="forest" src="./assets/pine_forest/scene.gltf"></a-asset-item>
+      <a-asset-item id="trex_2" src="./assets/animated_tyrannosaurus_rex_dinosaur_running_loop (1)/scene.gltf"></a-asset-item>
+    </a-assets>
+    <a-entity gltf-model="#forest"></a-entity>
+    <a-entity gltf-model="#trex_2" scale="1 1 1" rotation="0 0 0"
+  random-move></a-entity>
+  <a-entity gltf-model="#trex" scale="1 1 1" rotation="0 0 0"
+  random-move2></a-entity>
+    <a-entity gltf-model="#ptr" scale="1 1 1" rotation="0 0 0" position="0 10 0"
+    animation__position1="
+                property: position;
+                from: 0 10 -14;
+                to: 0 10 14;
+                dur: 5000;
+                loop: false;
+                easing: linear;
+                autoplay: true;"
+            animation__position2="
+            property: rotation;
+            from: 0 0 0;
+            to: 0 180 0;
+            startEvents: animationcomplete__position1"
+            animation__position3="
+                property: position;
+                from: 0 10 14;
+                to: 0 10 -14;
+                dur: 5000;
+                loop: false;
+                easing: linear;
+                startEvents: animationcomplete__position2" animation-mixer="clip: Animation"></a-entity>
+
+    <a-entity>
+      <a-light light="type: ambient;
+      intensity: 5;"></a-light>
+    </a-entity>
+
+
+  </a-scene>
+</body>
+
+</html>
